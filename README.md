@@ -33,7 +33,6 @@ These projects cover foundational combinational and sequential circuits, arithme
 | Priority Encoder                 | Outputs the highest-priority active input               | Behavioral           |
 | Mod-N Counter                   | Parameterized modulo-N counter                           | Behavioral           |
 | N:1 Multiplexer (Parameterized) | Generic mux with configurable number of inputs          | Behavioral           |
-| Ring and Johnson Counters        | Sequential ring and twisted ring counters               | Behavioral           |
 | 4-bit ALU                      | Arithmetic and logic operations with multiple functions | Behavioral           |
 
 ---
