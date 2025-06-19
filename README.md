@@ -30,7 +30,6 @@ These projects cover foundational combinational and sequential circuits, arithme
 | 3-to-8 Decoder                  | Converts 3-bit input to 8 outputs                       | Behavioral           |
 | 4-bit Ripple Carry Adder         | Multi-bit adder with carry propagation                  | Structural           |
 | D Flip-Flop                     | Clocked sequential element with reset options          | Behavioral           |
-| Vending Machine FSM              | Coin-operated vending machine finite state machine      | FSM (Behavioral)     |
 | Priority Encoder                 | Outputs the highest-priority active input               | Behavioral           |
 | Mod-N Counter                   | Parameterized modulo-N counter                           | Behavioral           |
 | N:1 Multiplexer (Parameterized) | Generic mux with configurable number of inputs          | Behavioral           |
