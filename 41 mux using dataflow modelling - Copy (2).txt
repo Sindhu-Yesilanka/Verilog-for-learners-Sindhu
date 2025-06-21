@@ -1,0 +1,33 @@
+// 4:1 mux using dataflow modelling
+module mux_4to1(y,s,a);
+  input [1:0]s ;
+  input [3:0]a;
+  output y;
+  assign y=s[1]?(s[0]?a[3]:a[2]):(s[0]?a[1]:a[0]);//data flow modelling assign statement 
+  //terinatory operator is same as in c
+endmodule
+// 4:1 MUX testbench here
+module tb;
+  reg [1:0]s;
+  reg [3:0]a;
+  wire y;
+  mux_4to1 dut(y,s,a);
+  initial
+    begin
+      for(integer i=0;i<8;i++)
+        begin
+          a=$random%10;
+          s=i;
+          #1;
+        end
+    end
+  initial
+    begin
+      $monitor("s=%b,a=%b,y=%b",s,a,y);
+    end
+  initial
+    begin
+      $dumpfile("mux4to1.vcd");
+      $dumpvars(0,s,a,y);
+    end
+endmodule

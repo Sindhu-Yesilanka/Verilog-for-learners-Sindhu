@@ -1,0 +1,32 @@
+//Write a Verilog code for a Half Subtractor using Dataflow Modeling.
+
+module half_subtractor (
+  input A, B,
+  output Diff, Borrow
+);
+  assign Diff = A ^ B;       // XOR for difference
+  assign Borrow = ~A & B;    // Borrow occurs when A=0 and B=1
+endmodule
+module tb_half_subtractor;
+
+  reg A, B;
+  wire Diff, Borrow;
+
+  // Instantiate the half subtractor
+  half_subtractor DUT (A, B, Diff, Borrow);
+
+  integer i;
+
+  initial begin
+    $display("A B | Diff Borrow");
+    $monitor("%b %b |   %b     %b", A, B, Diff, Borrow);
+
+    // Loop through all 2-bit combinations (A, B)
+    for (i = 0; i < 4; i = i + 1) begin
+      {A, B} = i[1:0];
+      #10;
+    end
+
+    $finish;
+  end
+endmodule

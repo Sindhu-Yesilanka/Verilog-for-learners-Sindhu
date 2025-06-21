@@ -1,0 +1,74 @@
+// Write a Verilog code for a 4-bit Arithmetic Logic Unit (ALU) using Behavioral Modeling.
+module ALU_4bit (
+  input  [3:0] A, B,
+  input  [2:0] OpSel,     // Operation selector
+  output reg [3:0] Result,
+  output Zero, Carry, Overflow
+);
+
+  reg c_out;
+
+  assign Zero = (Result == 4'b0000);
+  assign Carry = c_out;
+  assign Overflow = (OpSel == 3'b000 || OpSel == 3'b001) ?
+                    ((A[3] == B[3]) && (Result[3] != A[3])) : 0;
+
+  always @(*) begin
+    case (OpSel)
+      3'b000: {c_out, Result} = A + B;         // Addition
+      3'b001: {c_out, Result} = A - B;         // Subtraction
+      3'b010: Result = A & B;                  // AND
+      3'b011: Result = A | B;                  // OR
+      3'b100: Result = A ^ B;                  // XOR
+      3'b101: Result = ~A;                     // NOT A
+      3'b110: Result = A << 1;                 // Shift Left
+      3'b111: Result = A >> 1;                 // Shift Right
+      default: Result = 4'b0000;
+    endcase
+  end
+
+endmodule
+//Test bench for 4bit alu
+module tb_ALU_4bit_ops;
+  reg  [3:0] A, B;
+  reg  [2:0] OpSel;
+  wire [3:0] Result;
+  wire Zero, Carry, Overflow;
+
+  integer i;
+
+  // Instantiate the ALU
+ALU_4bitdut(.A(A),.B(B),.OpSel(OpSel),.Result(Result),.Zero(Zero),.Carry(Carry),.Overflow(Overflow));
+
+  initial begin
+    // Fixed input values
+    A = 4'b0110;  // 6
+    B = 4'b0011;  // 3
+
+    $display("Testing all operations for A = %b, B = %b", A, B);
+    $display("OpSel | Operation | Result | Zero | Carry | Overflow");
+    $display("------------------------------------------------------");
+
+    for (i = 0; i < 8; i = i + 1) begin
+      OpSel = i[2:0];
+      #5;  // wait for output to stabilize
+
+      // Optional: decode operation name
+      case (OpSel)
+        3'b000: $write("  %b   |   ADD     | ", OpSel);
+        3'b001: $write("  %b   |   SUB     | ", OpSel);
+        3'b010: $write("  %b   |   AND     | ", OpSel);
+        3'b011: $write("  %b   |   OR      | ", OpSel);
+        3'b100: $write("  %b   |   XOR     | ", OpSel);
+        3'b101: $write("  %b   |   NOT A   | ", OpSel);
+        3'b110: $write("  %b   |   A << 1  | ", OpSel);
+        3'b111: $write("  %b   |   A >> 1  | ", OpSel);
+        default: $write("  %b   | Unknown   | ", OpSel);
+      endcase
+
+      $display("%b    |   %b   |   %b    |    %b", Result, Zero, Carry, Overflow);
+    end
+
+    $finish;
+  end
+endmodule

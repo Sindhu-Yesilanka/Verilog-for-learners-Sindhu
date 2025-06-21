@@ -1,0 +1,24 @@
+// 2to4decoder in behavourial modelling design here
+module decoder_2to4(y,a);
+  input [1:0]a;
+  output [3:0]y;
+  assign y=1<<a;//leftshift operation
+endmodule
+// decoder testbench here
+module tb;
+  reg [1:0]a;
+  wire [3:0]y;
+  decoder_2to4 dut(y,a);
+  initial
+    begin
+      for(integer i=0;i<4;i++)
+        begin
+          a=i;
+          #1;
+        end
+    end
+  initial
+    begin
+      $monitor("a%b,y=%b",a,y);
+    end
+endmodule

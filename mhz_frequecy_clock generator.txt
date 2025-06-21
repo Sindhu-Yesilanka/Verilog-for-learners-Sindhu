@@ -1,0 +1,31 @@
+// Write a generalized Verilog code to generate the clock signal of n- MHz.
+
+module clock_generator(clk);
+  output reg clk;
+  integer tp;
+  parameter freq_mhz=100;//frequency in mhz
+  initial
+    begin
+      clk=1'b0;
+      tp=(1000/freq_mhz);//timeperiod of 1 cycle
+    end
+  always 
+    begin
+      #(tp/2)clk=~clk;//clk flips at half of time period
+    end
+endmodule
+  // Code your testbench here
+module tb;
+  wire clk;
+  clock_generator dut(clk);
+  initial
+    begin
+      #200$finish;
+    end
+  initial
+     begin
+    $dumpfile("dump.vcd");
+       $dumpvars(0, dut);
+  end
+endmodule
+  

@@ -1,0 +1,31 @@
+//design of half_adder using gate_level_modelling
+module half_adder(a,b,s,c);
+  input wire a,b;
+  output reg s,c;
+  xor x1(s,a,b);//gate(output,inputs)
+  and  a1(c,a,b);//gate level modelling
+endmodule
+//testbench of half_adder
+module tb;
+   wire s,c;//input always be reg
+   reg a,b;//output always be wire
+  half_adder dut(a,b,s,c);//dut instantiation
+  initial
+    begin//every intial block needs begin and end
+      for(integer i=0;i<4;i++)
+        begin
+          {a,b}=i;//lsb bits of i will be assigned to a and b ,{}=concentanation operator
+          #2;//delay
+        end
+    end
+  initial
+    begin
+      $monitor("a=%d.b=%d,s=%d,c=%d",a,b,s,c);//monitor display values whenever therre is change in values
+    end
+  initial
+    begin
+      $dumpfile("halfadder.vcd");//to open output wavwform and vcd=value changed dump
+      $dumpvars(0,a,b,s,c);
+    end
+endmodule
+

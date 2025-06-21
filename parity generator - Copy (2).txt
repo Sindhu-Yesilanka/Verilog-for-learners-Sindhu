@@ -1,0 +1,34 @@
+//Design a Parity Generator (Even Parity for 4-bit input) using Dataflow Modeling
+module even_parity_generator_4bit_gate (
+  input [3:0] data,
+  output parity
+);
+  wire xor1, xor2, xor3;
+
+  xor (xor1, data[0], data[1]);
+  xor (xor2, data[2], data[3]);
+  xor (parity, xor1, xor2);
+
+endmodule
+// testbench here
+module tb_even_parity_generator_4bit;
+
+  reg [3:0] data;
+  wire parity;
+
+  even_parity_generator_4bit_gate DUT (data, parity);
+
+  integer i;
+
+  initial begin
+    $display("Data  | Even Parity");
+    $monitor("%b |     %b", data, parity);
+
+    for (i = 0; i < 16; i = i + 1) begin
+      data = i[3:0];
+      #10;
+    end
+
+    $finish;
+  end
+endmodule

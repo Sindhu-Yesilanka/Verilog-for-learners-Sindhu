@@ -1,0 +1,45 @@
+// Design a mod-N counter by using Verilog.
+module mod_N_counter(clk, rst, count);
+  parameter N = 8;
+  input clk, rst;
+  output [$clog2(N)-1:0] count;
+  reg [$clog2(N)-1:0] temp;
+  assign count = temp;
+
+  always @(posedge clk) begin
+    if (rst)
+      temp <= 0;
+    else if (temp == N - 1)
+      temp <= 0;
+    else
+      temp <= temp + 1;
+  end
+endmodule
+// testbench here
+module tb;
+  parameter N=8;
+  reg clk,rst;
+  wire [$clog2(N)-1:0] count;
+  mod_N_counter dut(clk,rst,count);
+   initial
+     begin
+       rst=1;
+       clk=0;
+       #10 rst=0;
+       #70 $finish;
+     end
+  always
+    begin
+    #5 clk=~clk;
+    end
+  initial
+    begin
+      $display("Time || CLK  || Count");
+      $monitor("%0t\t%b\t%b",$time,clk,count);
+    end
+  initial
+    begin
+      $dumpfile("dump.vcd");
+      $dumpvars(0,rst,clk,count);
+    end
+endmodule   

@@ -1,0 +1,75 @@
+// 4-to-1 Multiplexer with case statement
+module mux_4to1 (
+  input [1:0] s,
+  input [3:0] a,
+  output reg y
+);
+  always @(*) begin
+    case (s)
+      2'b00: y = a[0];
+      2'b01: y = a[1];
+      2'b10: y = a[2];
+      2'b11: y = a[3];
+      default: y = 1'b0;
+    endcase
+  end
+endmodule
+
+// 2-to-1 Multiplexer with case statement
+module mux_2to1 (
+  input s,
+  input a0, a1,
+  output reg y
+);
+  always @(*) begin
+    case (s)
+      1'b0: y = a0;
+      1'b1: y = a1;
+      default: y = 1'b0;
+    endcase
+  end
+endmodule
+
+// 8-to-1 MUX using structural modeling with positional port mapping
+module mux_8to1_using_4to1 (
+  input [2:0] s,
+  input [7:0] a,
+  output y
+);
+  wire y0, y1;
+
+  // Instantiate two 4-to-1 MUXes (positional mapping)
+  mux_4to1 M0 (s[1:0], a[3:0], y0);
+  mux_4to1 M1 (s[1:0], a[7:4], y1);
+
+  // Instantiate one 2-to-1 MUX (positional mapping)
+  mux_2to1 M2 (s[2], y0, y1, y);
+endmodule
+module tb_mux_8to1;
+
+  reg [7:0] a;       // 8 input lines
+  reg [2:0] s;       // 3-bit select line
+  wire y;            // Output
+
+  // Instantiate the 8-to-1 multiplexer (positional port mapping)
+  mux_8to1_using_4to1 DUT (s, a, y);
+
+  integer i; // loop variable
+
+  initial begin
+    // Initialize input data
+    a = 8'b11011010; // a[7]=1, a[6]=1, ..., a[0]=0
+
+    $display("data\t\t s\t y");
+    $monitor("%b\t%b\t%b", a, s, y);
+
+    // Apply all combinations of select input using for loop
+    for (i = 0; i < 8; i = i + 1) begin
+      s = i[2:0]; // convert integer i to 3-bit select
+      #10;
+    end
+
+    #10 $finish;
+  end
+
+endmodule

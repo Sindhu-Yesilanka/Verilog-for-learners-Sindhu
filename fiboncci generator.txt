@@ -1,0 +1,32 @@
+module fibonacci;
+  reg [7:0] a, b, c;
+  integer i;
+  parameter n = 5;  // Number of Fibonacci numbers
+  initial begin
+    a = 0;
+    b = 1;
+    $display("Fibonacci Series:");
+    $display("%d", a);
+    $display("%d", b);
+    for (i = 2; i < n; i = i + 1) begin
+      c = a + b;
+      $display("%d", c);
+      a = b;  // Move to next step
+      b = c;
+    end
+  end
+endmodule
+
+// Code your testbench here
+// or browse Examples
+module fibonacci_tb();
+  // No inputs required as the fibonacci module runs on its own
+  
+  // Instantiate the Fibonacci module
+  fibonacci uut();
+  initial begin
+    // Run the simulation for some time to let it execute
+    #50;
+    $finish;
+  end
+endmodule

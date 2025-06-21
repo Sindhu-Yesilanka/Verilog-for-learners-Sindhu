@@ -1,0 +1,47 @@
+// File: swap_blocking.v
+module swap_blocking;
+    reg [7:0] a, b;
+
+    initial begin
+        a = 8'd10;
+        b = 8'd20;
+        $display("Before Swap: a = %0d, b = %0d", a, b);
+
+        // Blocking assignments (sequential in simulation)
+        a = a ^ b;
+        b = a ^ b;
+        a = a ^ b;
+
+        $display("After Swap : a = %0d, b = %0d", a, b);
+    end
+endmodule
+
+// File: swap_nonblocking.v
+module swap_nonblocking;
+    reg clk;
+    reg [7:0] a, b;
+    reg [7:0] temp;
+
+    // Clock generation
+    initial begin
+        clk = 0;
+        forever #5 clk = ~clk;  // Clock toggles every 5 time units
+    end
+
+    // Initial values for a and b
+    initial begin
+        a = 8'd10;
+        b = 8'd20;
+        #2;  // Wait a little before displaying
+        $display("Before Swap: a = %0d, b = %0d", a, b);
+        #10; // Wait enough time for one posedge clk
+        $display("After  Swap: a = %0d, b = %0d", a, b);
+        $finish;
+    end
+
+    // Swap logic using non-blocking assignment
+    always @(posedge clk) begin
+      a<=b;
+      b<=a;
+    end
+endmodule

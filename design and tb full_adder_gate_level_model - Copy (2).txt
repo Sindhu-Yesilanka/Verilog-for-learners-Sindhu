@@ -1,0 +1,35 @@
+// design full_adder_gate_level_modelling
+module full_adder(a,b,cin,s,c);
+  input a,b,cin;
+  output s,c;
+  wire w1,w2,w3,w4;
+  xor x1(w1,a,b);
+  xor x2(s,w1,c);
+  and a1(w2,a,b);
+  and a2(w3,b,c);
+  and a3(w4,a,c);
+  or(c,w1,w2,w3);
+endmodule
+// full_adder testbench here
+module tb;
+  reg a,b,cin;
+  wire s,c;
+  full_adder dut(a,b,cin,s,c);
+  initial
+    begin
+      for(integer i=0;i<8;i++)
+        begin
+          {a,b,cin}=i;
+          #1;
+        end
+    end
+  initial
+    begin
+      $monitor("a=%d,b=%d,cin=%d,s=%d,c=%d",a,b,cin,s,c);
+    end
+  initial
+    begin
+    $dumpfile("fulladder.vcd");
+    $dumpvars(0,a,b,cin,s,c);
+    end
+endmodule

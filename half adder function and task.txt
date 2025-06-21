@@ -1,0 +1,49 @@
+// Code your design here
+module half_adder(a,b,s,c);
+  input a,b;
+  output s,c;
+  assign{s,c}=sum(a,b);
+endmodule
+function[1:0]sum(input X,Y);
+    begin
+    sum=X+Y;
+    end
+  endfunction
+module half_adder(a, b, s, c);
+  input a, b;
+  output reg s, c; // Outputs should be `reg` since we assign values inside a task
+  task sum;
+    input x, y;
+    output reg sum,carry;
+    begin
+      sum= x ^ y;  // XOR for sum
+      carry= x & y; // AND for carry
+    end
+  endtask
+  always @(*) 
+    begin
+    sum(a, b, s, c); // Calling task to compute sum and carry
+  end
+endmodule
+ module tb;
+  reg a, b;
+  wire s, c;
+  
+  half_adder dut(a, b, s, c);
+  
+  initial
+  begin
+    #2a = 0; b = 0;
+    #2a = 0; b = 1;
+    #2a = 1; b = 0;
+    #2a = 1; b = 1; 
+    #10 $finish;
+  end
+
+  initial
+  begin
+    $dumpfile("dump.vcd");
+    $dumpvars(0, tb);
+    $monitor("a=%b, b=%b, s=%b, c=%b", a, b, s, c);
+  end
+endmodule

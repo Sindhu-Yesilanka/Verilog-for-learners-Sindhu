@@ -1,0 +1,68 @@
+// Write code frequency divide by n
+module freq_div_by_n #(parameter N = 8) (
+  input clk,
+  input rst,
+  output reg out_clk
+);
+  // Calculate bit width needed for counting
+  localparam WIDTH = $clog2(N);
+
+  reg [WIDTH-1:0] count;
+
+  always @(posedge clk or posedge rst) begin
+    if (rst) begin
+      count <= 0;
+      out_clk <= 0;
+    end else begin
+      if (count == (N/2 - 1)) begin
+        count <= 0;
+        out_clk <= ~out_clk;  // Toggle output clock every N/2 input cycles
+      end else begin
+        count <= count + 1;
+      end
+    end
+  end
+endmodule
+module tb_freq_div_by_n;
+  parameter N = 8;
+  reg clk, rst;
+  wire out_clk;
+
+  // Instantiate the frequency divider
+  freq_div_by_n #(N) dut (
+    .clk(clk),
+    .rst(rst),
+    .out_clk(out_clk)
+  );
+
+  // Clock generation: 10 time units period (100 MHz if time unit = ns)
+  initial begin
+    clk = 0;
+    forever #5 clk = ~clk;  // Toggle every 5 time units
+  end
+
+  // Test sequence
+  initial begin
+    // Initialize reset
+    rst = 1;
+    #20;
+    rst = 0;
+
+    // Run simulation for some time to observe output
+    #200;
+
+    $finish;
+  end
+
+  // Display output changes
+  initial begin
+    $display("Time\tclk\trst\tout_clk");
+    $monitor("%0t\t%b\t%b\t%b", $time, clk, rst, out_clk);
+  end
+
+  // Dump waveforms for GTKWave or similar
+  initial begin
+    $dumpfile("freq_div_by_n.vcd");
+    $dumpvars(0, tb_freq_div_by_n);
+  end
+endmodule

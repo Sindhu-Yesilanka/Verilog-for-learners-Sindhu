@@ -1,0 +1,39 @@
+module B2G(b,g);
+  parameter n = 4;
+  input  [n-1:0] b;
+  output [n-1:0] g;
+
+  assign g[n-1] = b[n-1];
+
+  genvar i;//genvar is keyword&vgenerate is loop
+  generate//generate statement is for replication of hardware
+    for (i = n-2; i >= 0; i = i - 1) 
+      begin : gray_gen
+      assign g[i] = b[i+1] ^ b[i];
+    end
+  endgenerate
+endmodule
+
+module tb;
+  parameter n = 4;
+  reg  [n-1:0] b;
+  wire [n-1:0] g;
+
+  // Instantiate the DUT
+  B2G #(n) dut (b, g);
+
+  integer i;
+
+  // Stimulus block
+  initial
+    begin
+    $display("Binary\tGray");
+    $monitor("%b\t%b", b, g);
+    for (i = 0; i < 16; i = i + 1) 
+      begin
+      b = i;
+      #10;  // wait time to observe output
+      end
+    $finish;
+  end
+endmodule

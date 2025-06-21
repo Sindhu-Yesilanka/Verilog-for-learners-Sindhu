@@ -1,0 +1,37 @@
+//Implement a Full Subtractor using Behavioral Modeling in Verilog.
+module full_subtractor (
+  input A, B, Bin,
+  output reg Diff, Borrow
+);
+  always @(*) begin
+    Diff = A ^ B ^ Bin;  // XOR chain for difference
+    Borrow = (~A & B) | ((~(A ^ B)) & Bin); // logic for borrow
+  end
+endmodule
+
+
+// Code your testbench here
+// or browse Examples
+module tb_full_subtractor;
+
+  reg A, B, Bin;
+  wire Diff, Borrow;
+
+  // Instantiate the full subtractor
+  full_subtractor DUT (A, B, Bin, Diff, Borrow);
+
+  integer i;
+
+  initial begin
+    $display("A B Bin | Diff Borrow");
+    $monitor("%b %b  %b  |   %b     %b", A, B, Bin, Diff, Borrow);
+
+    // Loop through all 3-bit combinations (A, B, Bin)
+    for (i = 0; i < 8; i = i + 1) begin
+      {A, B, Bin} = i[2:0];
+      #10;
+    end
+
+    $finish;
+  end
+endmodule
